@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<title>Nomor Tidak Dikenal</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;user-select:none}
+html,body{height:100%;background:#000;overflow:hidden;font-family:-apple-system,"SF Pro Text","Helvetica Neue",Helvetica,Arial,sans-serif;color:#fff}
+body{display:flex;align-items:center;justify-content:center}
+.phone{position:relative;width:100vw;height:100dvh;background:#000;overflow:hidden}
+@media (min-width:500px){
+  .phone{width:390px;height:844px;max-height:96vh;border-radius:48px;border:10px solid #1c1c1e;box-shadow:0 0 0 2px #333,0 30px 80px rgba(255,0,0,.12)}
+}
+.status{position:absolute;top:0;left:0;right:0;height:50px;padding:14px 28px 0;display:flex;justify-content:space-between;align-items:flex-start;font-size:15px;font-weight:600;z-index:50;pointer-events:none}
+.island{position:absolute;top:11px;left:50%;transform:translateX(-50%);width:105px;height:30px;background:#000;border-radius:20px;z-index:60}
+.st-right{display:flex;gap:6px;align-items:center;font-size:13px}
+.batt{width:25px;height:12px;border:1.5px solid #fff9;border-radius:4px;padding:1px;position:relative}
+.batt i{display:block;height:100%;width:30%;background:#ff453a;border-radius:2px}
+.phone[data-screen="s-lock"] .st-time{visibility:hidden}
+.screen{position:absolute;inset:0;opacity:0;pointer-events:none;transition:opacity .35s}
+.screen.active{opacity:1;pointer-events:auto}
+
+/* LOCK */
+#s-lock{background:radial-gradient(circle at 30% 20%,#2b1a4a,#0d0a1c 60%,#000);touch-action:none}
+.l-clock{position:absolute;top:110px;width:100%;text-align:center}
+.l-date{font-size:19px;font-weight:500;opacity:.85}
+.l-time{font-size:96px;font-weight:300;letter-spacing:-2px;line-height:1.05}
+.notif{position:absolute;left:12px;right:12px;top:340px;background:rgba(60,60,67,.72);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-radius:22px;padding:13px 14px;display:flex;gap:11px;transform:translateY(-30px);opacity:0;transition:all .5s}
+.notif.in{transform:none;opacity:1}
+.wa{width:38px;height:38px;border-radius:9px;background:#25d366;display:flex;align-items:center;justify-content:center;flex:none}
+.n-body{flex:1;min-width:0}
+.n-top{display:flex;justify-content:space-between;font-size:13px;opacity:.7}
+.n-title{font-size:15px;font-weight:600;margin-top:1px}
+.n-text{font-size:15px;opacity:.92;margin-top:1px}
+.l-bottom{position:absolute;bottom:0;left:0;right:0;height:150px;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding-bottom:10px}
+.l-tools{position:absolute;bottom:60px;left:44px;right:44px;display:flex;justify-content:space-between}
+.l-tools b{width:50px;height:50px;border-radius:50%;background:rgba(255,255,255,.14);display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:400}
+.hint{font-size:14px;opacity:.65;animation:pulse 2s infinite;padding:10px 20px;cursor:pointer}
+.home{width:135px;height:5px;border-radius:3px;background:#fff;opacity:.9;margin:4px 0 6px}
+@keyframes pulse{50%{opacity:.25}}
+
+/* PASSCODE */
+#s-pass{background:radial-gradient(circle at 70% 10%,#241838,#0a0814 70%,#000);text-align:center}
+.p-title{position:absolute;top:120px;width:100%;font-size:19px}
+.dots{position:absolute;top:170px;width:100%;display:flex;justify-content:center;gap:20px}
+.dots i{width:13px;height:13px;border-radius:50%;border:1.5px solid #fff;transition:background .1s}
+.dots i.on{background:#fff}
+.keys{position:absolute;top:230px;left:50%;transform:translateX(-50%);display:grid;grid-template-columns:repeat(3,76px);gap:14px 20px}
+.key{width:76px;height:76px;border-radius:50%;background:rgba(255,255,255,.14);display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:32px;font-weight:300;transition:background .15s;cursor:pointer}
+.key small{font-size:10px;letter-spacing:2px;font-weight:600;margin-top:-2px;min-height:12px}
+.key:active{background:rgba(255,255,255,.5)}
+.key.void{background:none;pointer-events:none}
+.cancel{position:absolute;bottom:55px;right:48px;font-size:17px}
+
+/* CHAT */
+#s-chat{background:#0b141a;display:flex;flex-direction:column}
+.c-head{padding:52px 12px 10px;background:#1f2c34;display:flex;align-items:center;gap:10px;flex:none}
+.c-back{font-size:30px;line-height:1;color:#00a884;margin-right:-2px}
+.avatar{width:38px;height:38px;border-radius:50%;background:#3b4a54;display:flex;align-items:center;justify-content:center;font-size:18px;color:#9fb0ba}
+.c-name{font-size:16px;font-weight:600}
+.c-stat{font-size:12px;color:#8696a0;min-height:15px}
+.c-body{flex:1;overflow:hidden;padding:14px 12px;display:flex;flex-direction:column;justify-content:flex-end;gap:6px;background-image:radial-gradient(#ffffff06 1px,transparent 1px);background-size:18px 18px}
+.bubble{align-self:flex-start;max-width:78%;background:#202c33;border-radius:10px 10px 10px 2px;padding:8px 10px 6px;font-size:17px;line-height:1.3;animation:pop .25s}
+.bubble span{font-size:11px;color:#8696a0;margin-left:10px;float:right;margin-top:6px}
+.sys{align-self:center;background:#182229;color:#8696a0;font-size:12.5px;padding:5px 10px;border-radius:8px;text-align:center;max-width:85%;margin-bottom:6px}
+@keyframes pop{from{transform:scale(.85) translateY(8px);opacity:0}}
+.c-input{flex:none;display:flex;gap:8px;padding:8px 10px 26px;align-items:center}
+.c-input div{flex:1;background:#1f2c34;border-radius:22px;padding:10px 16px;color:#8696a0;font-size:15px}
+.c-input b{width:42px;height:42px;border-radius:50%;background:#00a884;display:flex;align-items:center;justify-content:center;font-size:18px}
+.c-tap{position:absolute;bottom:92px;left:0;right:0;text-align:center;font-size:14px;color:#8696a0;opacity:0;transition:opacity .6s}
+.c-tap.show{opacity:1;animation:pulse 1.8s infinite}
+
+/* INCOMING + CALL */
+#s-incoming,#s-call{background:linear-gradient(180deg,#1b1b2b,#0a0a12 60%,#1a0808);text-align:center}
+.i-name{position:absolute;top:130px;width:100%;font-size:40px;font-weight:400}
+.i-sub{position:absolute;top:186px;width:100%;font-size:19px;opacity:.65}
+.i-quick{position:absolute;bottom:230px;left:44px;right:44px;display:flex;justify-content:space-between;font-size:13px}
+.i-quick div{display:flex;flex-direction:column;align-items:center;gap:6px}
+.i-quick b{width:50px;height:50px;border-radius:50%;background:rgba(255,255,255,.14);display:flex;align-items:center;justify-content:center;font-size:19px;font-weight:400}
+.i-act{position:absolute;bottom:70px;left:44px;right:44px;display:flex;justify-content:space-between}
+.i-act div{display:flex;flex-direction:column;align-items:center;gap:8px;font-size:14px;cursor:pointer}
+.circle{width:74px;height:74px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:30px}
+.red{background:#ff3b30}.green{background:#30d158}
+.rot{display:inline-block;transform:rotate(135deg)}
+.i-warn{position:absolute;bottom:160px;width:100%;font-size:14px;color:#ff453a;opacity:0;transition:opacity .3s}
+.i-warn.show{opacity:1}
+.shake{animation:shake .45s}
+@keyframes shake{20%{transform:translateX(-10px)}40%{transform:translateX(10px)}60%{transform:translateX(-7px)}80%{transform:translateX(7px)}}
+#c-name{transition:color .1s}
+#c-name.bad{color:#ff2a2a;letter-spacing:2px}
+.c-timer{position:absolute;top:186px;width:100%;font-size:19px;opacity:.65;font-variant-numeric:tabular-nums}
+.c-cap{position:absolute;top:290px;width:100%;padding:0 30px;font-size:26px;font-style:italic;opacity:0;transition:opacity .8s;color:#ddd}
+.c-cap.show{opacity:.85}
+.grid{position:absolute;bottom:190px;left:36px;right:36px;display:grid;grid-template-columns:repeat(3,1fr);gap:22px 0;font-size:13px}
+.grid div{display:flex;flex-direction:column;align-items:center;gap:6px}
+.grid b{width:64px;height:64px;border-radius:50%;background:rgba(255,255,255,.14);display:flex;align-items:center;justify-content:center;font-size:24px}
+.endbtn{position:absolute;bottom:70px;left:50%;transform:translateX(-50%)}
+
+/* END */
+#s-end{background:#000;display:flex;align-items:center;justify-content:center;text-align:center}
+.e-t{font-size:22px;opacity:.9}
+.banner{position:absolute;top:56px;left:10px;right:10px;background:rgba(60,60,67,.9);border-radius:22px;padding:13px 14px;display:flex;gap:11px;text-align:left;transform:translateY(-140px);transition:transform .5s cubic-bezier(.2,1,.3,1);z-index:70}
+.banner.in{transform:none}
+.replay{position:absolute;bottom:90px;left:0;right:0;text-align:center;opacity:0;transition:opacity 1s;pointer-events:none}
+.replay.show{opacity:1;pointer-events:auto}
+.replay span{border:1px solid #fff5;padding:10px 26px;border-radius:30px;font-size:15px;opacity:.7;cursor:pointer}
+
+/* GLITCH */
+.gl{position:absolute;inset:0;z-index:80;pointer-events:none;display:none;mix-blend-mode:normal}
+.phone.glitch .gl{display:block;animation:flick .09s steps(2) infinite;background:repeating-linear-gradient(0deg,rgba(255,0,0,.35) 0 3px,rgba(0,0,0,.6) 3px 6px)}
+.phone.glitch .screen.active{animation:jit .08s infinite;filter:contrast(1.6) saturate(2.5) hue-rotate(-20deg)}
+@keyframes flick{0%{background-color:rgba(255,0,0,.55)}50%{background-color:rgba(0,0,0,.85)}}
+@keyframes jit{0%{transform:translate(-6px,2px) skewX(3deg)}33%{transform:translate(7px,-3px) skewX(-4deg)}66%{transform:translate(-3px,5px)}100%{transform:translate(4px,-2px) skewX(2deg)}}
+</style>
+</head>
+<body>
+<div class="phone" id="phone" data-screen="s-lock">
+  <div class="island"></div>
+  <div class="status">
+    <span class="st-time">02.13</span>
+    <span class="st-right">5G <span class="batt"><i></i></span></span>
+  </div>
+
+  <!-- LOCK -->
+  <section class="screen active" id="s-lock">
+    <div class="l-clock">
+      <div class="l-date">Rabu, 21 Oktober</div>
+      <div class="l-time">02.13</div>
+    </div>
+    <div class="notif" id="notif">
+      <div class="wa"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a9 9 0 0 0-7.7 13.6L3 21l4.5-1.2A9 9 0 1 0 12 3z"/><path d="M9 8.5c0 3.5 3 6.5 6.5 6.5l1-1.5-2-1-1 .8c-1-.4-2-1.4-2.4-2.4l.8-1-1-2z" fill="#fff" stroke="none"/></svg></div>
+      <div class="n-body">
+        <div class="n-top"><span>WHATSAPP</span><span>sekarang</span></div>
+        <div class="n-title">Nomor Tidak Dikenal</div>
+        <div class="n-text">Aku lihat kamu barusan</div>
+      </div>
+    </div>
+    <div class="l-tools"><b>🔦</b><b>📷</b></div>
+    <div class="l-bottom">
+      <div class="hint" id="unlockHint">⌃ Geser ke atas untuk membuka</div>
+      <div class="home"></div>
+    </div>
+  </section>
+
+  <!-- PASSCODE -->
+  <section class="screen" id="s-pass">
+    <div class="p-title">Masukkan Kode Sandi</div>
+    <div class="dots" id="dots"><i></i><i></i><i></i><i></i></div>
+    <div class="keys" id="keys"></div>
+    <div class="cancel">Batal</div>
+  </section>
+
+  <!-- CHAT -->
+  <section class="screen" id="s-chat">
+    <div class="c-head">
+      <div class="c-back">‹</div>
+      <div class="avatar">?</div>
+      <div><div class="c-name">Nomor Tidak Dikenal</div><div class="c-stat" id="c-stat">online</div></div>
+    </div>
+    <div class="c-body" id="c-body">
+      <div class="sys">🔒 Nomor ini tidak ada di kontakmu.</div>
+    </div>
+    <div class="c-input"><div>Ketik pesan</div><b>🎤</b></div>
+    <div class="c-tap" id="c-tap">Ketuk untuk lanjut</div>
+  </section>
+
+  <!-- INCOMING -->
+  <section class="screen" id="s-incoming">
+    <div class="i-name">Mama</div>
+    <div class="i-sub">seluler</div>
+    <div class="i-quick">
+      <div><b>⏰</b>Ingatkan Saya</div>
+      <div><b>💬</b>Pesan</div>
+    </div>
+    <div class="i-warn" id="i-warn">Panggilan tidak dapat ditolak</div>
+    <div class="i-act">
+      <div id="btn-decline"><span class="circle red"><span class="rot">📞</span></span>Tolak</div>
+      <div id="btn-accept"><span class="circle green">📞</span>Terima</div>
+    </div>
+  </section>
+
+  <!-- CALL -->
+  <section class="screen" id="s-call">
+    <div class="i-name" id="c-name">Mama</div>
+    <div class="c-timer" id="c-timer">00:00</div>
+    <div class="c-cap" id="c-cap"></div>
+    <div class="grid">
+      <div><b>🔇</b>bisukan</div><div><b>⌨️</b>papan tombol</div><div><b>🔊</b>speaker</div>
+      <div><b>➕</b>tambah</div><div><b>📹</b>FaceTime</div><div><b>👤</b>kontak</div>
+    </div>
+    <div class="endbtn" id="btn-end"><span class="circle red"><span class="rot">📞</span></span></div>
+  </section>
+
+  <!-- END -->
+  <section class="screen" id="s-end">
+    <div class="e-t">Panggilan Berakhir</div>
+    <div class="banner" id="banner">
+      <div class="wa"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a9 9 0 0 0-7.7 13.6L3 21l4.5-1.2A9 9 0 1 0 12 3z"/></svg></div>
+      <div class="n-body">
+        <div class="n-top"><span>WHATSAPP</span><span>sekarang</span></div>
+        <div class="n-title">Nomor Tidak Dikenal</div>
+        <div class="n-text">Kamu nengok.</div>
+      </div>
+    </div>
+    <div class="replay" id="replay"><span>Ulangi</span></div>
+  </section>
+
+  <div class="gl"></div>
+</div>
+
+<script>
+const $ = id => document.getElementById(id);
+const phone = $('phone');
+const timers = [];
+const later = (fn, ms) => timers.push(setTimeout(fn, ms));
+const vib = p => { try { navigator.vibrate && navigator.vibrate(p); } catch(e){} };
+
+function show(id){
+  document.querySelectorAll('.screen').forEach(s => s.classList.toggle('active', s.id === id));
+  phone.dataset.screen = id;
+}
+
+/* ---------- AUDIO ---------- */
+let ac, master, ringTimer, drone;
+function audioInit(){
+  if (ac) { if (ac.state === 'suspended') ac.resume(); return; }
+  try {
+    ac = new (window.AudioContext || window.webkitAudioContext)();
+    master = ac.createGain(); master.gain.value = .7; master.connect(ac.destination);
+  } catch(e){ ac = null; }
+}
+function tone(f, t0, d, type='sine', v=.15){
+  if (!ac) return;
+  const o = ac.createOscillator(), g = ac.createGain(), t = ac.currentTime + t0;
+  o.type = type; o.frequency.value = f;
+  g.gain.setValueAtTime(0, t);
+  g.gain.linearRampToValueAtTime(v, t + .01);
+  g.gain.exponentialRampToValueAtTime(.0001, t + d);
+  o.connect(g); g.connect(master); o.start(t); o.stop(t + d + .05);
+}
+const ping = () => { tone(880, 0, .15); tone(1320, .12, .3); };
+function ringStart(){
+  const r = () => { for (let i = 0; i < 4; i++){ tone(660, i*.2, .13, 'triangle', .12); tone(880, i*.2, .13, 'triangle', .12); } };
+  r(); ringTimer = setInterval(r, 2400);
+}
+const ringStop = () => clearInterval(ringTimer);
+function droneStart(){
+  if (!ac) return;
+  const o = ac.createOscillator(), g = ac.createGain(), l = ac.createOscillator(), lg = ac.createGain();
+  o.type = 'sawtooth'; o.frequency.value = 46; g.gain.value = .05;
+  l.frequency.value = .35; lg.gain.value = .035; l.connect(lg); lg.connect(g.gain);
+  o.connect(g); g.connect(master); o.start(); l.start(); drone = [o, l];
+}
+function droneStop(){ if (drone){ drone.forEach(n => { try{ n.stop(); }catch(e){} }); drone = null; } }
+function stinger(){
+  if (!ac) return;
+  const len = ac.sampleRate * .9, buf = ac.createBuffer(1, len, ac.sampleRate), d = buf.getChannelData(0);
+  for (let i = 0; i < len; i++) d[i] = (Math.random()*2-1) * Math.pow(1 - i/len, 2);
+  const s = ac.createBufferSource(), g = ac.createGain();
+  s.buffer = buf; g.gain.value = .5; s.connect(g); g.connect(master); s.start();
+  tone(70, 0, .9, 'sawtooth', .25); tone(233, 0, .6, 'square', .08);
+}
+
+/* ---------- LOCK ---------- */
+const lock = $('s-lock');
+setTimeout(() => $('notif').classList.add('in'), 900);
+let startY = null, dy = 0;
+lock.addEventListener('pointerdown', e => { audioInit(); startY = e.clientY; dy = 0; lock.style.transition = 'none'; });
+lock.addEventListener('pointermove', e => {
+  if (startY === null) return;
+  dy = Math.min(0, e.clientY - startY);
+  lock.style.transform = `translateY(${dy}px)`;
+});
+const endDrag = () => {
+  if (startY === null) return;
+  startY = null;
+  if (dy < -90) unlock();
+  else { lock.style.transition = 'transform .25s'; lock.style.transform = ''; }
+};
+lock.addEventListener('pointerup', endDrag);
+lock.addEventListener('pointercancel', endDrag);
+$('unlockHint').addEventListener('click', () => { audioInit(); unlock(); });
+
+function unlock(){
+  lock.style.transition = 'transform .3s, opacity .35s';
+  lock.style.transform = 'translateY(-100%)';
+  show('s-pass');
+  setTimeout(() => { lock.style.transition = 'none'; lock.style.transform = ''; }, 500);
+}
+
+/* ---------- PASSCODE ---------- */
+const letters = {2:'ABC',3:'DEF',4:'GHI',5:'JKL',6:'MNO',7:'PQRS',8:'TUV',9:'WXYZ'};
+const keys = $('keys'); let code = 0, locked = false;
+['1','2','3','4','5','6','7','8','9','','0',''].forEach(k => {
+  const d = document.createElement('div');
+  if (!k){ d.className = 'key void'; }
+  else {
+    d.className = 'key';
+    d.innerHTML = `${k}<small>${letters[k] || ''}</small>`;
+    d.addEventListener('click', () => {
+      if (locked) return;
+      audioInit();
+      const dots = document.querySelectorAll('#dots i');
+      dots[code].classList.add('on'); code++;
+      if (code === 4){ locked = true; later(startChat, 400); }
+    });
+  }
+  keys.appendChild(d);
+});
+
+/* ---------- CHAT ---------- */
+let canContinue = false;
+function bubble(text){
+  const b = document.createElement('div');
+  b.className = 'bubble';
+  b.innerHTML = `${text}<span>02.13</span>`;
+  const body = $('c-body'); body.appendChild(b);
+  while (body.children.length > 8) body.removeChild(body.children[1]);
+  ping(); vib(120);
+}
+function typing(on){ $('c-stat').textContent = on ? 'mengetik...' : 'online'; }
+function startChat(){
+  show('s-chat');
+  const msgs = [
+    [1200, 2600, 'Jangan nengok'],
+    [3600, 5000, 'Dia di belakang kamu'],
+    [6000, 8200, 'Kamu masih baca ini?']
+  ];
+  msgs.forEach(([t1, t2, txt]) => { later(() => typing(true), t1); later(() => { typing(false); bubble(txt); }, t2); });
+  later(() => { $('c-tap').classList.add('show'); canContinue = true; }, 9400);
+}
+$('s-chat').addEventListener('click', () => {
+  if (!canContinue) return;
+  canContinue = false; startIncoming();
+});
+
+/* ---------- INCOMING ---------- */
+function startIncoming(){
+  show('s-incoming');
+  ringStart(); vib([600, 300, 600, 300, 600, 300, 600]);
+  $('btn-accept').addEventListener('click', answer, { once: true });
+  $('btn-decline').addEventListener('click', () => {
+    const s = $('s-incoming');
+    s.classList.remove('shake'); void s.offsetWidth; s.classList.add('shake');
+    $('i-warn').classList.add('show'); vib(300);
+    later(answer, 1700);
+  }, { once: true });
+}
+
+/* ---------- CALL ---------- */
+let sec = 0, tick, answered = false;
+const fmt = n => String(Math.floor(n/60)).padStart(2,'0') + ':' + String(n%60).padStart(2,'0');
+function cap(txt){ const c = $('c-cap'); c.textContent = txt; c.classList.add('show'); }
+function answer(){
+  if (answered) return; answered = true;
+  ringStop(); show('s-call'); droneStart();
+  sec = 0; $('c-timer').textContent = fmt(0);
+  tick = setInterval(() => { sec++; $('c-timer').textContent = fmt(sec); }, 1000);
+
+  later(() => cap('(tidak ada suara)'), 4500);
+  later(() => { $('c-cap').classList.remove('show'); }, 7000);
+  later(() => { $('c-name').textContent = 'Bukan Mama'; $('c-name').classList.add('bad'); vib(80); }, 8500);
+  later(() => { $('c-name').textContent = 'Mama'; $('c-name').classList.remove('bad'); }, 8900);
+  later(() => cap('Nak… jangan nengok.'), 10000);
+  later(() => { phone.classList.add('glitch'); stinger(); vib([200, 80, 200, 80, 400]); }, 12500);
+  later(() => { $('c-timer').textContent = '–03:00:00'; }, 13000);
+  later(endCall, 14500);
+}
+$('btn-end').addEventListener('click', () => {
+  const s = $('s-call'); s.classList.remove('shake'); void s.offsetWidth; s.classList.add('shake'); vib(200);
+});
+
+function endCall(){
+  clearInterval(tick); droneStop();
+  phone.classList.remove('glitch');
+  show('s-end');
+  later(() => { $('banner').classList.add('in'); ping(); vib([200, 100, 200]); }, 2500);
+  later(() => { $('banner').classList.remove('in'); }, 7000);
+  later(() => $('replay').classList.add('show'), 8500);
+}
+$('replay').addEventListener('click', () => location.reload());
+</script>
+</body>
+</html>
